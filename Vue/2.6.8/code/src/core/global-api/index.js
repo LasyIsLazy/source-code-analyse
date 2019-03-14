@@ -1,3 +1,7 @@
+/**
+ * 导出全局 API
+ */
+
 /* @flow */
 
 import config from '../config'
@@ -29,28 +33,36 @@ export function initGlobalAPI (Vue: GlobalAPI) {
       )
     }
   }
+  // Vue.config 获取 Vue 的配置
+  // TOLEARN: Vue.config
   Object.defineProperty(Vue, 'config', configDef)
 
   // exposed util methods.
   // NOTE: these are not considered part of the public API - avoid relying on
   // them unless you are aware of the risk.
+  // Vue 的 util，非公共 API
+  // TOLEARN: Vue.util
   Vue.util = {
     warn,
     extend,
     mergeOptions,
     defineReactive
   }
-
+// TOLEARN: Vue.set, delete, nextTick
   Vue.set = set
   Vue.delete = del
   Vue.nextTick = nextTick
 
   // 2.6 explicit observable API
+  // Vue.observalbe 使对象可响应
+  // TOLEARN Vue.observable
   Vue.observable = <T>(obj: T): T => {
     observe(obj)
     return obj
   }
 
+  // TOLEARN ? Object.create
+  // TOLEARN Vue.options
   Vue.options = Object.create(null)
   ASSET_TYPES.forEach(type => {
     Vue.options[type + 's'] = Object.create(null)

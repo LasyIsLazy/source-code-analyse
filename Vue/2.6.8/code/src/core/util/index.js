@@ -1,3 +1,8 @@
+/**
+ * 这个文件导出所有的工具类函数
+ */
+
+//TOLEARN ? @flow 是做什么的
 /* @flow */
 
 export * from 'shared/util'

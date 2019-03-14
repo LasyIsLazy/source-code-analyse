@@ -4,6 +4,8 @@ export const emptyObject = Object.freeze({})
 
 // These helpers produce better VM code in JS engines due to their
 // explicitness and function inlining.
+// 这些函数性能会更好
+// TOLEARN ? 更好？
 export function isUndef (v: any): boolean %checks {
   return v === undefined || v === null
 }
@@ -22,6 +24,7 @@ export function isFalse (v: any): boolean %checks {
 
 /**
  * Check if value is primitive.
+ * 检查是否是原始值（不包括 undefined、null）
  */
 export function isPrimitive (value: any): boolean %checks {
   return (
@@ -37,6 +40,7 @@ export function isPrimitive (value: any): boolean %checks {
  * Quick object check - this is primarily used to tell
  * Objects from primitive values when we know the value
  * is a JSON-compliant type.
+ * 判断是不是对象（而不是原始值）
  */
 export function isObject (obj: mixed): boolean %checks {
   return obj !== null && typeof obj === 'object'
@@ -44,6 +48,7 @@ export function isObject (obj: mixed): boolean %checks {
 
 /**
  * Get the raw type string of a value, e.g., [object Object].
+ * 获取值的类型字符串
  */
 const _toString = Object.prototype.toString
 
@@ -54,23 +59,32 @@ export function toRawType (value: any): string {
 /**
  * Strict object type check. Only returns true
  * for plain JavaScript objects.
+ * 判断是否是普通对象
  */
 export function isPlainObject (obj: any): boolean {
   return _toString.call(obj) === '[object Object]'
 }
 
+/**
+ * 是否是正则对象
+ */
 export function isRegExp (v: any): boolean {
   return _toString.call(v) === '[object RegExp]'
 }
 
 /**
  * Check if val is a valid array index.
+ * 判断是否是有效的数组下标
  */
 export function isValidArrayIndex (val: any): boolean {
+  // TOLEARN ?parseFloat
   const n = parseFloat(String(val))
   return n >= 0 && Math.floor(n) === n && isFinite(val)
 }
 
+/**
+ * 判断是否是 Promise——then 和 catch 属性是函数
+ */
 export function isPromise (val: any): boolean {
   return (
     isDef(val) &&
@@ -81,6 +95,9 @@ export function isPromise (val: any): boolean {
 
 /**
  * Convert a value to a string that is actually rendered.
+ * 把值转换成 Vue 实际渲染出来的字符串
+ * null => ''
+ * 数组、普通对象 => JSON>stringify(val, null, 2)
  */
 export function toString (val: any): string {
   return val == null
@@ -93,6 +110,7 @@ export function toString (val: any): string {
 /**
  * Convert an input value to a number for persistence.
  * If the conversion fails, return original string.
+ * 转换成数字
  */
 export function toNumber (val: string): number | string {
   const n = parseFloat(val)
@@ -119,16 +137,21 @@ export function makeMap (
 
 /**
  * Check if a tag is a built-in tag.
+ * 判断标签是否是内置的标签
+ * Vue 内置的标签：slot、component
  */
 export const isBuiltInTag = makeMap('slot,component', true)
 
 /**
  * Check if an attribute is a reserved attribute.
+ * 判断属性是否是保留属性
+ * Vue 保留属性：key、ref、slot、slot-scope、is
  */
 export const isReservedAttribute = makeMap('key,ref,slot,slot-scope,is')
 
 /**
  * Remove an item from an array.
+ * 从数组中移除一个元素
  */
 export function remove (arr: Array<any>, item: any): Array<any> | void {
   if (arr.length) {
@@ -141,6 +164,7 @@ export function remove (arr: Array<any>, item: any): Array<any> | void {
 
 /**
  * Check whether an object has the property.
+ * 判断对象是否有该属性
  */
 const hasOwnProperty = Object.prototype.hasOwnProperty
 export function hasOwn (obj: Object | Array<*>, key: string): boolean {
@@ -149,6 +173,8 @@ export function hasOwn (obj: Object | Array<*>, key: string): boolean {
 
 /**
  * Create a cached version of a pure function.
+ * 创建一个纯函数的缓存版本
+ * TOLEARN ? 缓存函数？
  */
 export function cached<F: Function> (fn: F): F {
   const cache = Object.create(null)

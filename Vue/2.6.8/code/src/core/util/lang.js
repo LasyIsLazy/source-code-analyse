@@ -9,6 +9,7 @@ export const unicodeRegExp = /a-zA-Z\u00B7\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u037
 
 /**
  * Check if a string starts with $ or _
+ * 检查是否是保留字段（以 $ 或 _ 开头）
  */
 export function isReserved (str: string): boolean {
   const c = (str + '').charCodeAt(0)
@@ -17,6 +18,7 @@ export function isReserved (str: string): boolean {
 
 /**
  * Define a property.
+ * 定义属性（用 Object.definProperty）
  */
 export function def (obj: Object, key: string, val: any, enumerable?: boolean) {
   Object.defineProperty(obj, key, {
@@ -29,6 +31,7 @@ export function def (obj: Object, key: string, val: any, enumerable?: boolean) {
 
 /**
  * Parse simple path.
+ * TOLEARN ? 解析路径
  */
 const bailRE = new RegExp(`[^${unicodeRegExp.source}.$_\\d]`)
 export function parsePath (path: string): any {
