@@ -70,12 +70,14 @@ export function initGlobalAPI (Vue: GlobalAPI) {
 
   // this is used to identify the "base" constructor to extend all plain-object
   // components with in Weex's multi-instance scenarios.
+  // TOLEARN _base
   Vue.options._base = Vue
 
+  // 把 builtInComponents 混合到 Vue.options.components 中
   extend(Vue.options.components, builtInComponents)
 
-  initUse(Vue)
-  initMixin(Vue)
+  initUse(Vue) // 初始化 Vue 的 use 方法
+  initMixin(Vue) // 初始化 mixin
   initExtend(Vue)
   initAssetRegisters(Vue)
 }
