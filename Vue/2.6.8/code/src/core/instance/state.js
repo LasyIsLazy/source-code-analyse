@@ -45,6 +45,9 @@ export function proxy (target: Object, sourceKey: string, key: string) {
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
+/**
+ * 初始化 state
+ */
 export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
@@ -61,6 +64,9 @@ export function initState (vm: Component) {
   }
 }
 
+/**
+ * 初始化 props
+ */
 function initProps (vm: Component, propsOptions: Object) {
   const propsData = vm.$options.propsData || {}
   const props = vm._props = {}
@@ -109,6 +115,9 @@ function initProps (vm: Component, propsOptions: Object) {
   toggleObserving(true)
 }
 
+/**
+ * 初始化 data
+ */
 function initData (vm: Component) {
   let data = vm.$options.data
   data = vm._data = typeof data === 'function'
@@ -166,6 +175,9 @@ export function getData (data: Function, vm: Component): any {
 
 const computedWatcherOptions = { lazy: true }
 
+/**
+ * 初始化 computed
+ */
 function initComputed (vm: Component, computed: Object) {
   // $flow-disable-line
   const watchers = vm._computedWatchers = Object.create(null)
