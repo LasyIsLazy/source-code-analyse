@@ -15,7 +15,7 @@ function Vue (options) {
   this._init(options)
 }
 
-initMixin(Vue)
+initMixin(Vue) // 初始化：created 及之前做的事情
 stateMixin(Vue)
 eventsMixin(Vue)
 lifecycleMixin(Vue)
