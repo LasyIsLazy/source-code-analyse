@@ -17,7 +17,7 @@ function Vue (options) {
 
 initMixin(Vue) // 初始化：created 及之前做的事情
 stateMixin(Vue) // Vue 原型上的一些属性、函数：$data、$props、$set、$delete、$watch
-eventsMixin(Vue)
+eventsMixin(Vue) // 事件相关的实例方法：$on、$once、$off、$emit
 lifecycleMixin(Vue)
 renderMixin(Vue)
 

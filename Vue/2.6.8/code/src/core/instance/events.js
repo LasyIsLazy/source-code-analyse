@@ -68,16 +68,25 @@ export function updateComponentListeners (
 
 export function eventsMixin (Vue: Class<Component>) {
   const hookRE = /^hook:/
+  // 实例方法 $on：监听实例上的自定义事件
   Vue.prototype.$on = function (event: string | Array<string>, fn: Function): Component {
     const vm: Component = this
     if (Array.isArray(event)) {
+      // 如果是数组则取每个值再次调用 $on 方法
       for (let i = 0, l = event.length; i < l; i++) {
         vm.$on(event[i], fn)
       }
     } else {
+      /**
+       * 将回调函数放入 `vm._events[event]` 中
+       * vm.events 存放当前实例监听的事件及回调
+       * event 是要监听的事件，string 类型
+       * fn 是回调函数
+       */
       (vm._events[event] || (vm._events[event] = [])).push(fn)
       // optimize hook:event cost by using a boolean flag marked at registration
       // instead of a hash lookup
+      // TOLEARN optimize hook:event
       if (hookRE.test(event)) {
         vm._hasHookEvent = true
       }
@@ -85,25 +94,33 @@ export function eventsMixin (Vue: Class<Component>) {
     return vm
   }
 
+  // 实例方法 $once：监听一个自定义事件，但是只触发一次
   Vue.prototype.$once = function (event: string, fn: Function): Component {
     const vm: Component = this
+    /**
+     * on 函数将 fn 进行包装，并作为监听器的回调
+     * on 函数调用一次就会调用 $off 方法移除该监听器
+     */
     function on () {
       vm.$off(event, on)
       fn.apply(vm, arguments)
     }
-    on.fn = fn
+    on.fn = fn // TOLEARN: 这行作用是什么？
     vm.$on(event, on)
     return vm
   }
 
+  // 实例方法 $off：移除自定义事件监听器
   Vue.prototype.$off = function (event?: string | Array<string>, fn?: Function): Component {
     const vm: Component = this
     // all
+    // 如果参数为空，移除全部监听器（即将 _events 置为一个新的空对象）
     if (!arguments.length) {
       vm._events = Object.create(null)
       return vm
     }
     // array of events
+    // 如果 event 是数组，则分别取值再调用 $off
     if (Array.isArray(event)) {
       for (let i = 0, l = event.length; i < l; i++) {
         vm.$off(event[i], fn)
@@ -111,15 +128,18 @@ export function eventsMixin (Vue: Class<Component>) {
       return vm
     }
     // specific event
+    // 移除特定的事件
     const cbs = vm._events[event]
     if (!cbs) {
       return vm
     }
     if (!fn) {
+      // 没有指定要移除的监听器，则移除该事件所有的监听器
       vm._events[event] = null
       return vm
     }
     // specific handler
+    // 移除特定的监听器
     let cb
     let i = cbs.length
     while (i--) {
@@ -132,6 +152,7 @@ export function eventsMixin (Vue: Class<Component>) {
     return vm
   }
 
+  // 实例方法 $emit：触发当前实例上的事件
   Vue.prototype.$emit = function (event: string): Component {
     const vm: Component = this
     if (process.env.NODE_ENV !== 'production') {
@@ -146,12 +167,13 @@ export function eventsMixin (Vue: Class<Component>) {
         )
       }
     }
-    let cbs = vm._events[event]
+    let cbs = vm._events[event] // 该事件对应的监听器
     if (cbs) {
       cbs = cbs.length > 1 ? toArray(cbs) : cbs
       const args = toArray(arguments, 1)
       const info = `event handler for "${event}"`
       for (let i = 0, l = cbs.length; i < l; i++) {
+        // 触发监听器
         invokeWithErrorHandling(cbs[i], vm, args, vm, info)
       }
     }
