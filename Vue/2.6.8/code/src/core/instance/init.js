@@ -54,13 +54,12 @@ export function initMixin (Vue: Class<Component>) {
     initEvents(vm) // 初始化事件
     initRender(vm) // 初始化渲染函数
     callHook(vm, 'beforeCreate') // 调用 beforeCreate 钩子
-    // 在初始化 data/props 之前解析 injections（provide/inject）
     // TOLEARN: initInjections
-    initInjections(vm) // resolve injections before data/props
-
+    initInjections(vm) // resolve injections before data/props（在初始化 data/props 之前解析 injections（inject））
     initState(vm) // 初始化 state（props、method、data、computed、watch）
-    initProvide(vm) // resolve provide after data/props
-    callHook(vm, 'created')
+    // TOLEARN: provide
+    initProvide(vm) // resolve provide after data/props（在 初始化 data/props 之后解析 provide）
+    callHook(vm, 'created') // 调用 created 钩子
 
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
