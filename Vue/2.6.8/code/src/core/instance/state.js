@@ -363,12 +363,15 @@ export function stateMixin (Vue: Class<Component>) {
       warn(`$props is readonly.`, this)
     }
   }
+  // 原型上的 $data 和 $props
   Object.defineProperty(Vue.prototype, '$data', dataDef)
   Object.defineProperty(Vue.prototype, '$props', propsDef)
 
+  // 原型上的 $set 和 $delete
   Vue.prototype.$set = set
   Vue.prototype.$delete = del
 
+  // 原型上的 $watch 函数
   Vue.prototype.$watch = function (
     expOrFn: string | Function,
     cb: any,
@@ -380,6 +383,7 @@ export function stateMixin (Vue: Class<Component>) {
     }
     options = options || {}
     options.user = true
+    // watch 是通过 watcher 的实例来实现的
     const watcher = new Watcher(vm, expOrFn, cb, options)
     if (options.immediate) {
       try {
@@ -388,6 +392,7 @@ export function stateMixin (Vue: Class<Component>) {
         handleError(error, vm, `callback for immediate watcher "${watcher.expression}"`)
       }
     }
+    // 返回的是一个 unwatch 函数，可以取消观察。
     return function unwatchFn () {
       watcher.teardown()
     }
