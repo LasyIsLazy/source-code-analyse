@@ -28,13 +28,17 @@ export function initRender (vm: Component) {
   // so that we get proper render context inside it.
   // args order: tag, data, children, normalizationType, alwaysNormalize
   // internal version is used by render functions compiled from templates
+  // 将 createElement 函数绑定到实例上，确保其使用正确的上下文环境。
+  // Vue 内部使用（将模板编译为 render 函数时使用）的 createElement
   vm._c = (a, b, c, d) => createElement(vm, a, b, c, d, false)
   // normalization is always applied for the public version, used in
   // user-written render functions.
+  // 提供给用户使用的 createElement
   vm.$createElement = (a, b, c, d) => createElement(vm, a, b, c, d, true)
 
   // $attrs & $listeners are exposed for easier HOC creation.
   // they need to be reactive so that HOCs using them are always updated
+  // TOLEARN: HOC 高阶组件
   const parentData = parentVnode && parentVnode.data
 
   /* istanbul ignore else */
