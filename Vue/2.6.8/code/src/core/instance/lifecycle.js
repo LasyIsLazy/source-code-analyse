@@ -32,7 +32,9 @@ export function setActiveInstance(vm: Component) {
 export function initLifecycle (vm: Component) {
   const options = vm.$options
 
-  // locate first non-abstract parent
+  // locate first non-abstract
+  // TOLEARN abstract
+  // 将该组件保存到父组件的 children 中
   let parent = options.parent
   if (parent && !options.abstract) {
     while (parent.$options.abstract && parent.$parent) {

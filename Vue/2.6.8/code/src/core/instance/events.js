@@ -10,10 +10,26 @@ import {
 import { updateListeners } from '../vdom/helpers/index'
 
 export function initEvents (vm: Component) {
+  /**
+   * 初始化 _events 对象，用于存放该组件上绑定的事件
+   * 在调用
+   * Vue.prototype.$on
+   * Vue.prototype.$once
+   * Vue.prototype.$off
+   * Vue.prototype.$emit
+   * 时，会操作这个对象
+   */
   vm._events = Object.create(null)
+
+  /** 该属性表示父组件是否通过 `@hook:` 把钩子函数绑定在当前组件上，
+   * 如 `@hook:created="callback"`。
+   * 作用是优化钩子，具体参考 callHook 函数的实现。
+   */
   vm._hasHookEvent = false
+
   // init parent attached events
   const listeners = vm.$options._parentListeners
+  // TOLEARN: updateComponentListeners
   if (listeners) {
     updateComponentListeners(vm, listeners)
   }

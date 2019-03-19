@@ -79,5 +79,5 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   initUse(Vue) // 初始化 Vue 的 use 方法
   initMixin(Vue) // 初始化 mixin
   initExtend(Vue) // 初始化 extend
-  initAssetRegisters(Vue)
+  initAssetRegisters(Vue) // TOLEARN: Asset?
 }
