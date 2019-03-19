@@ -33,7 +33,8 @@ export function initLifecycle (vm: Component) {
   const options = vm.$options
 
   // locate first non-abstract
-  // TOLEARN abstract
+  // 定位第一个非抽象父组件
+  // 非抽象组件：自身不会渲染一个 DOM 元素，也不会出现在父组件链中
   // 将该组件保存到父组件的 children 中
   let parent = options.parent
   if (parent && !options.abstract) {
