@@ -72,6 +72,7 @@ function initProps (vm: Component, propsOptions: Object) {
   const props = vm._props = {}
   // cache prop keys so that future props updates can iterate using Array
   // instead of dynamic object key enumeration.
+  // 缓存 prop 键，方便以后使用数组遍历
   const keys = vm.$options._propKeys = []
   const isRoot = !vm.$parent
   // root instance props should be converted
@@ -82,6 +83,7 @@ function initProps (vm: Component, propsOptions: Object) {
     keys.push(key)
     const value = validateProp(key, propsOptions, propsData, vm)
     /* istanbul ignore else */
+    // 将 props 设置为响应式
     if (process.env.NODE_ENV !== 'production') {
       const hyphenatedKey = hyphenate(key)
       if (isReservedAttribute(hyphenatedKey) ||
@@ -108,6 +110,8 @@ function initProps (vm: Component, propsOptions: Object) {
     // static props are already proxied on the component's prototype
     // during Vue.extend(). We only need to proxy props defined at
     // instantiation here.
+    // 静态 props 已经在 Vue.extend() 的时候代理到组件的 prototype 上了。我们只需要代理在实例化的时候定义的 props
+    // TOLEARN: static props
     if (!(key in vm)) {
       proxy(vm, `_props`, key)
     }
@@ -143,20 +147,22 @@ function initData (vm: Component) {
         warn(
           `Method "${key}" has already been defined as a data property.`,
           vm
-        )
+          )
+        }
       }
-    }
-    if (props && hasOwn(props, key)) {
-      process.env.NODE_ENV !== 'production' && warn(
-        `The data property "${key}" is already declared as a prop. ` +
-        `Use prop default value instead.`,
-        vm
-      )
+      if (props && hasOwn(props, key)) {
+        process.env.NODE_ENV !== 'production' && warn(
+          `The data property "${key}" is already declared as a prop. ` +
+          `Use prop default value instead.`,
+          vm
+          )
     } else if (!isReserved(key)) {
+      // 把 data 代理到实例上
       proxy(vm, `_data`, key)
     }
   }
   // observe data
+  // 使 data 可响应
   observe(data, true /* asRootData */)
 }
 
@@ -207,6 +213,7 @@ function initComputed (vm: Component, computed: Object) {
     // component-defined computed properties are already defined on the
     // component prototype. We only need to define computed properties defined
     // at instantiation here.
+    // TOLEARN: component-defined computed properties
     if (!(key in vm)) {
       defineComputed(vm, key, userDef)
     } else if (process.env.NODE_ENV !== 'production') {
@@ -252,6 +259,7 @@ export function defineComputed (
 
 function createComputedGetter (key) {
   return function computedGetter () {
+    // TOLEARN: _computedWatchers
     const watcher = this._computedWatchers && this._computedWatchers[key]
     if (watcher) {
       if (watcher.dirty) {
@@ -271,6 +279,9 @@ function createGetterInvoker(fn) {
   }
 }
 
+/**
+ * 初始化 methods
+ */
 function initMethods (vm: Component, methods: Object) {
   const props = vm.$options.props
   for (const key in methods) {
@@ -295,10 +306,14 @@ function initMethods (vm: Component, methods: Object) {
         )
       }
     }
+    // 绑定 methods[key] 到实例上
     vm[key] = typeof methods[key] !== 'function' ? noop : bind(methods[key], vm)
   }
 }
 
+/**
+ * 初始化 watch
+ */
 function initWatch (vm: Component, watch: Object) {
   for (const key in watch) {
     const handler = watch[key]
