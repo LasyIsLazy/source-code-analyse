@@ -338,7 +338,11 @@ export function deactivateChildComponent (vm: Component, direct?: boolean) {
 
 export function callHook (vm: Component, hook: string) {
   // #7573 disable dep collection when invoking lifecycle hooks
+  // TOLEARN: pushTarget 有什么作用
   pushTarget()
+  /**
+   * 调用 vm.$options 中定义的钩子函数
+   */
   const handlers = vm.$options[hook]
   const info = `${hook} hook`
   if (handlers) {
@@ -346,8 +350,12 @@ export function callHook (vm: Component, hook: string) {
       invokeWithErrorHandling(handlers[i], vm, null, vm, info)
     }
   }
+  /**
+   * 对于使用 `@hook:` 定义的钩子函数使用 `$emit` 的方式触发
+   */
   if (vm._hasHookEvent) {
     vm.$emit('hook:' + hook)
   }
+  // TOLEARN 两种方式区别、_hasHookEvent 的优化体现在哪
   popTarget()
 }

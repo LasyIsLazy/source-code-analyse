@@ -21,7 +21,8 @@ export function initEvents (vm: Component) {
    */
   vm._events = Object.create(null)
 
-  /** 该属性表示父组件是否通过 `@hook:` 把钩子函数绑定在当前组件上，
+  /**
+   *  该属性表示父组件是否通过 `@hook:` 把钩子函数绑定在当前组件上，
    * 如 `@hook:created="callback"`。
    * 作用是优化钩子，具体参考 callHook 函数的实现。
    */
