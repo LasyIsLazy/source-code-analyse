@@ -68,7 +68,7 @@ export default class Watcher {
     this.id = ++uid // uid for batching
     this.active = true
     this.dirty = this.lazy // for lazy watchers
-    this.deps = []
+    this.deps = [] // 该 watcher 的依赖
     this.newDeps = []
     this.depIds = new Set()
     this.newDepIds = new Set()
@@ -99,7 +99,7 @@ export default class Watcher {
    * Evaluate the getter, and re-collect dependencies.
    */
   get () {
-    pushTarget(this)
+    pushTarget(this) // 执行： targetStack.push(target); Dep.target = target
     let value
     const vm = this.vm
     try {
@@ -138,6 +138,8 @@ export default class Watcher {
 
   /**
    * Clean up for dependency collection.
+   * 清理收集到的依赖：
+   * 移除 newDeps 没有的依赖，即不再需要的依赖。
    */
   cleanupDeps () {
     let i = this.deps.length
@@ -159,16 +161,19 @@ export default class Watcher {
 
   /**
    * Subscriber interface.
+   * 订阅者接口
    * Will be called when a dependency changes.
+   * 当依赖改变的时候被调用
    */
   update () {
     /* istanbul ignore else */
     if (this.lazy) {
+      // TOLEARN: lazy
       this.dirty = true
     } else if (this.sync) {
-      this.run()
+      this.run() // 同步直接运行
     } else {
-      queueWatcher(this)
+      queueWatcher(this) // 放入观察者队列
     }
   }
 

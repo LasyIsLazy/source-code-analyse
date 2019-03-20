@@ -40,15 +40,13 @@ export function initGlobalAPI (Vue: GlobalAPI) {
   // exposed util methods.
   // NOTE: these are not considered part of the public API - avoid relying on
   // them unless you are aware of the risk.
-  // Vue 的 util，非公共 API
-  // TOLEARN: Vue.util
+  // Vue 的内部属性、方法，非公共 API：util、set、delete、nextTick
   Vue.util = {
     warn,
     extend,
     mergeOptions,
     defineReactive
   }
-// TOLEARN: Vue.set, delete, nextTick
   Vue.set = set
   Vue.delete = del
   Vue.nextTick = nextTick
