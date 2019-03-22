@@ -32,6 +32,9 @@ function flushCallbacks () {
 // or even between bubbling of the same event (#6566).
 let timerFunc
 
+/**
+ * 整体思路：先后尝试使用：Promise、MutationObserver、setImediate、setTimeout
+ */
 // The nextTick behavior leverages the microtask queue, which can be accessed
 // via either native Promise.then or MutationObserver.
 // MutationObserver has wider support, however it is seriously bugged in

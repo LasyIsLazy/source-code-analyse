@@ -46,7 +46,7 @@ export function proxy (target: Object, sourceKey: string, key: string) {
 }
 
 /**
- * 初始化 state
+ * 初始化 state：props、methods、data、computed、watch
  */
 export function initState (vm: Component) {
   vm._watchers = []

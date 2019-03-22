@@ -188,7 +188,7 @@ export function defineReactive (
         val = newVal
       }
       childOb = !shallow && observe(newVal)
-      dep.notify() // 通知 watchers 更新（`wather.update()`)
+      dep.notify() // 通知 watchers 更新（`watcher.update()`)
     }
   })
 }
