@@ -90,7 +90,7 @@ export default class Watcher {
         )
       }
     }
-    this.value = this.lazy
+    this.value = this.lazy // computed 中的 watcher 会传入options: { lasy: true }，因此 computed 是惰性求值的
       ? undefined
       : this.get()
   }
@@ -168,7 +168,6 @@ export default class Watcher {
   update () {
     /* istanbul ignore else */
     if (this.lazy) {
-      // TOLEARN: lazy
       this.dirty = true
     } else if (this.sync) {
       this.run() // 同步直接运行

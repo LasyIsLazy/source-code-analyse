@@ -202,6 +202,7 @@ function initComputed (vm: Component, computed: Object) {
 
     if (!isSSR) {
       // create internal watcher for the computed property.
+      // 创建 computed 内部的 watcher
       watchers[key] = new Watcher(
         vm,
         getter || noop,
@@ -259,14 +260,13 @@ export function defineComputed (
 
 function createComputedGetter (key) {
   return function computedGetter () {
-    // TOLEARN: _computedWatchers
     const watcher = this._computedWatchers && this._computedWatchers[key]
     if (watcher) {
-      if (watcher.dirty) {
-        watcher.evaluate()
+      if (watcher.dirty) { // watcher.dirty 默认为 wathcer.lasy（true）
+        watcher.evaluate() // 求值，调用 watcher.get()并设置 dirty = false
       }
-      if (Dep.target) {
-        watcher.depend()
+      if (Dep.target) { // 在渲染过程中，target 为 render watcher（上一步 evaluate() 调用 get() 后会 pop 出 computed watcher）
+        watcher.depend() // 把依赖添加到 render watcher 中
       }
       return watcher.value
     }
