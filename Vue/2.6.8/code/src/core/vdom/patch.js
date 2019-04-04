@@ -415,13 +415,17 @@ export function createPatchFunction (backend) {
     // removeOnly is a special flag used only by <transition-group>
     // to ensure removed elements stay in correct relative positions
     // during leaving transitions
-    const canMove = !removeOnly
+    const canMove = !removeOnly // TOLEARN: removeOnly
 
     if (process.env.NODE_ENV !== 'production') {
       checkDuplicateKeys(newCh)
     }
 
-    while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
+    /**
+     * Diff 算法，
+     * 可以参考：https://juejin.im/post/5affd01551882542c83301da
+     */
+    while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) { // 循环结束条件：指针相遇
       if (isUndef(oldStartVnode)) {
         oldStartVnode = oldCh[++oldStartIdx] // Vnode has been moved left
       } else if (isUndef(oldEndVnode)) {
@@ -444,31 +448,36 @@ export function createPatchFunction (backend) {
         canMove && nodeOps.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm)
         oldEndVnode = oldCh[--oldEndIdx]
         newStartVnode = newCh[++newStartIdx]
-      } else {
+      } else { // 没有相同节点
         if (isUndef(oldKeyToIdx)) oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx)
+        // 查找相同 key 的 oldCh 的 index
         idxInOld = isDef(newStartVnode.key)
           ? oldKeyToIdx[newStartVnode.key]
           : findIdxInOld(newStartVnode, oldCh, oldStartIdx, oldEndIdx)
-        if (isUndef(idxInOld)) { // New element
+        if (isUndef(idxInOld)) { // New element 没有找到相同的则创建
           createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm, false, newCh, newStartIdx)
         } else {
+          // 找到相同（key 相同或 sameVnode）的：再次判断是否相同（sameVnode），相同则保留并移动；不同则创建。
           vnodeToMove = oldCh[idxInOld]
-          if (sameVnode(vnodeToMove, newStartVnode)) {
+          if (sameVnode(vnodeToMove, newStartVnode)) { // TOLEARN: 为什么再次判断
             patchVnode(vnodeToMove, newStartVnode, insertedVnodeQueue, newCh, newStartIdx)
             oldCh[idxInOld] = undefined
             canMove && nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm)
           } else {
             // same key but different element. treat as new element
+            // TOLEARN: same key but different element
             createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm, false, newCh, newStartIdx)
           }
         }
-        newStartVnode = newCh[++newStartIdx]
+        newStartVnode = newCh[++newStartIdx] // start 指针右移
       }
     }
     if (oldStartIdx > oldEndIdx) {
+      // newStartIdx 和 newEndIdx 之间是要增加的节点
       refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm
       addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue)
     } else if (newStartIdx > newEndIdx) {
+      // oldStartIdx 和 oldEndIdx 之间是要删除的节点
       removeVnodes(parentElm, oldCh, oldStartIdx, oldEndIdx)
     }
   }
