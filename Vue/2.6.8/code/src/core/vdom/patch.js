@@ -438,12 +438,12 @@ export function createPatchFunction (backend) {
         patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue, newCh, newEndIdx)
         oldEndVnode = oldCh[--oldEndIdx]
         newEndVnode = newCh[--newEndIdx]
-      } else if (sameVnode(oldStartVnode, newEndVnode)) { // Vnode moved right
+      } else if (sameVnode(oldStartVnode, newEndVnode)) { // Vnode moved right 移动 vnode 到右边
         patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue, newCh, newEndIdx)
         canMove && nodeOps.insertBefore(parentElm, oldStartVnode.elm, nodeOps.nextSibling(oldEndVnode.elm))
         oldStartVnode = oldCh[++oldStartIdx]
         newEndVnode = newCh[--newEndIdx]
-      } else if (sameVnode(oldEndVnode, newStartVnode)) { // Vnode moved left
+      } else if (sameVnode(oldEndVnode, newStartVnode)) { // Vnode moved left 移动 vnode 到左边
         patchVnode(oldEndVnode, newStartVnode, insertedVnodeQueue, newCh, newStartIdx)
         canMove && nodeOps.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm)
         oldEndVnode = oldCh[--oldEndIdx]
@@ -459,13 +459,12 @@ export function createPatchFunction (backend) {
         } else {
           // 找到相同（key 相同或 sameVnode）的：再次判断是否相同（sameVnode），相同则保留并移动；不同则创建。
           vnodeToMove = oldCh[idxInOld]
-          if (sameVnode(vnodeToMove, newStartVnode)) { // TOLEARN: 为什么再次判断
+          if (sameVnode(vnodeToMove, newStartVnode)) {
             patchVnode(vnodeToMove, newStartVnode, insertedVnodeQueue, newCh, newStartIdx)
             oldCh[idxInOld] = undefined
             canMove && nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm)
           } else {
             // same key but different element. treat as new element
-            // TOLEARN: same key but different element
             createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm, false, newCh, newStartIdx)
           }
         }
@@ -713,7 +712,7 @@ export function createPatchFunction (backend) {
     }
 
     let isInitialPatch = false
-    const insertedVnodeQueue = []
+    const insertedVnodeQueue = [] // 要插入的 vnode 的队列
 
     if (isUndef(oldVnode)) {
       // empty mount (likely as component), create new root element

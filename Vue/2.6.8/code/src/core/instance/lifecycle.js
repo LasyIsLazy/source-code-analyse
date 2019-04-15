@@ -74,7 +74,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
     } else {
       // updates
-      // 计算出要更新的节点，__patch__ 内部回到用 diff 算法
+      // 计算出要更新的节点，__patch__ 内部回调用 diff 算法
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
     restoreActiveInstance()
